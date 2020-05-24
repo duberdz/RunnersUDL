@@ -1,4 +1,4 @@
-package com.runnersudl.retos;
+package com.runnersudl.rutas;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -117,22 +117,22 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
     static MapView mMapView;
     static TextView no_connection;
 
-    // CREAR RETO
+    // CREAR RUTA
     List<LatLng> points = new ArrayList<>();
     Polyline polyline;
     Marker startPoint;
 
     // LISTADO DE RETOS
-    List<Reto> listadoRetos = new ArrayList<>();
+    List<Ruta> listadoRutas = new ArrayList<>();
 
     // Floating Buttons Menu
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton FAM_crearReto, FAM_verRetos;
 
-    // Actual reto
-    Reto actualReto;
+    // Actual ruta
+    Ruta actualRuta;
     Polyline actualReto_polyline;
-    private TextView actualReto_titulo, actualReto_descripcion, info, activityText;
+    private TextView actualReto_descripcion, info, activityText;
     private Button comenzarBoton;
 
     private Marker marker;
@@ -225,7 +225,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
             mMapView = (MapView) rootView.findViewById(R.id.map);
             no_connection = (TextView) rootView.findViewById(R.id.no_connection);
 
-            actualReto_titulo = (TextView) rootView.findViewById(R.id.titulo);
+            //actualReto_titulo = (TextView) rootView.findViewById(R.id.titulo);
             actualReto_descripcion = (TextView) rootView.findViewById(R.id.descripcion);
             info = (TextView) rootView.findViewById(R.id.info);
             activityText = (TextView) rootView.findViewById(R.id.activity_recognition);
@@ -242,7 +242,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
                     retoEmpezado = true;
                     CameraPosition cameraPosition =
                             new CameraPosition.Builder()
-                                    .target(actualReto.points.get(0))
+                                    .target(actualRuta.points.get(0))
                                     .bearing(45)
                                     .tilt(90)
                                     .zoom(myMap.getCameraPosition().zoom)
@@ -365,7 +365,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
                         // Add a new document with a generated ID
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                        Map<String, Object> reto = new Reto(titulo.getText().toString(), desc.getText().toString(), points).toHashMap();
+                        Map<String, Object> reto = new Ruta(titulo.getText().toString(), desc.getText().toString(), points).toHashMap();
 
                         db.collection("Retos")
                                 .add(reto)
@@ -437,7 +437,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        listadoRetos.add(Reto.fromHashMapToReto(document.getData(), document.getId().toString()));
+                                        listadoRutas.add(Ruta.fromHashMapToRuta(document.getData(), document.getId().toString()));
                                         Log.d(TAG, document.getId() + " => " + document.getData());
                                     }
                                     loading.setVisibility(View.INVISIBLE);
@@ -469,14 +469,14 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
     }
 
     // Crear nuevo reto y añadirlo a la lista de retos
-    private void setReto(Reto reto) {
-        actualReto_titulo.setText(reto.name);
-        actualReto_descripcion.setText(reto.descripcion);
-        actualReto = reto;
+    private void setReto(Ruta ruta) {
+        //actualReto_titulo.setText(reto.name);
+        actualReto_descripcion.setText(ruta.descripcion);
+        actualRuta = ruta;
         if (retoEmpezado) {
             cd.cancel();
             comenzarBoton.setVisibility(View.INVISIBLE);
-            myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(actualReto.getMiddlePoint(), 15));
+            myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(actualRuta.getMiddlePoint(), 15));
         }
 
         setPolyline(true, false);
@@ -490,7 +490,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
                 .color(Color.BLUE)
                 .width(20)
                 .clickable(false)
-                .addAll(actualReto.points));
+                .addAll(actualRuta.points));
 
         actualReto_polyline.setStartCap(new CustomCap(BitmapDescriptorFactory.fromResource(R.drawable.start_cap), 20));
         if (onRace) {
@@ -501,14 +501,14 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
             BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.end_cap);
             Bitmap b = bitmapdraw.getBitmap();
             Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-            poly_marker = myMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(smallMarker)).position(actualReto.points.get(actualReto.points.size() - 1)));
+            poly_marker = myMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(smallMarker)).position(actualRuta.points.get(actualRuta.points.size() - 1)));
         } else
             actualReto_polyline.setEndCap(new CustomCap(BitmapDescriptorFactory.fromResource(R.drawable.end_cap), 300));
         actualReto_polyline.setJointType(JointType.DEFAULT);
         actualReto_polyline.setPattern(null);
 
         if (animate)
-            myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(actualReto.getMiddlePoint(), 15));
+            myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(actualRuta.getMiddlePoint(), 15));
     }
 
 
@@ -519,7 +519,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         mMapView.onPause();
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("listadoRetos", new Gson().toJson(listadoRetos));
-        editor.putString("actualReto", new Gson().toJson(actualReto));
+        editor.putString("actualReto", new Gson().toJson(actualRuta));
         editor.apply();
 
         // Activity recognition
@@ -564,11 +564,11 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         myMap.setPadding(0, 0, this.getResources().getDisplayMetrics().widthPixels - 150, 150);
 
         String json_actualReto = prefs.getString("actualReto", "");
-        Type type = new TypeToken<Reto>() {
+        Type type = new TypeToken<Ruta>() {
         }.getType();
-        if (!json_actualReto.isEmpty()) actualReto = new Gson().fromJson(json_actualReto, type);
+        if (!json_actualReto.isEmpty()) actualRuta = new Gson().fromJson(json_actualReto, type);
 
-        if (actualReto != null) setReto(actualReto);
+        if (actualRuta != null) setReto(actualRuta);
     }
 
 
@@ -599,9 +599,9 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         sPref = sharedPrefs.getString("listPref", "Wi-Fi");
 
         //SharedPreferences
-        //String json = prefs.getString("listadoRetos","");
-        //Type type = new TypeToken<List<Reto>>() {}.getType();
-        //if (!json.isEmpty()) listadoRetos = new Gson().fromJson(json, type);
+        String json = prefs.getString("listadoRetos","");
+        Type type = new TypeToken<List<Ruta>>() {}.getType();
+        if (!json.isEmpty()) listadoRetos = new Gson().fromJson(json, type);
     }
 
     private void createLocationRequest() {
@@ -809,28 +809,29 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         if (marker != null) marker.remove();
         if (mCurrentLocation != null && myMap != null)
             marker = myMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.pointer)).position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).title("Localización actual"));
-        if (mCurrentLocation != null && myMap != null && actualReto != null) {
-            Log.d("", retoEmpezado + " " + " Actual: " + mCurrentLocation.getLatitude() + " " + mCurrentLocation.getLongitude() + " Reto: " + actualReto.points.get(actualPoint).latitude + " " + actualReto.points.get(actualPoint).longitude);
+        if (mCurrentLocation != null && myMap != null && actualRuta != null) {
+            Log.d("", retoEmpezado + " " + " Actual: " + mCurrentLocation.getLatitude() + " " + mCurrentLocation.getLongitude() + " Reto: " + actualRuta.points.get(actualPoint).latitude + " " + actualRuta.points.get(actualPoint).longitude);
 
             // Ha llegado al punto inicial
-            if (!retoEmpezado && Math.abs(mCurrentLocation.getLatitude() - actualReto.points.get(0).latitude) < 0.0002 && Math.abs(mCurrentLocation.getLongitude() - actualReto.points.get(0).longitude) < 0.0002) {
+            if (!retoEmpezado && Math.abs(mCurrentLocation.getLatitude() - actualRuta.points.get(0).latitude) < 0.0002 && Math.abs(mCurrentLocation.getLongitude() - actualRuta.points.get(0).longitude) < 0.0002) {
                 info.setText("Haz click en 'Comenzar reto'");
                 comenzarBoton.setVisibility(View.VISIBLE);
             } else if (!retoEmpezado) {
                 comenzarBoton.setVisibility(View.INVISIBLE);
                 info.setText("Muévete hacia el punto inicial");
             }
-            if (retoEmpezado && Math.abs(mCurrentLocation.getLatitude() - actualReto.points.get(actualPoint).latitude) < 0.0002 && Math.abs(mCurrentLocation.getLongitude() - actualReto.points.get(actualPoint).longitude) < 0.0002) {
+            if (retoEmpezado && Math.abs(mCurrentLocation.getLatitude() - actualRuta.points.get(actualPoint).latitude) < 0.0002 && Math.abs(mCurrentLocation.getLongitude() - actualRuta.points.get(actualPoint).longitude) < 0.0002) {
 
                 // Ha llegado a la meta
-                if (actualPoint + 1 == actualReto.points.size()) {
+                if (actualPoint + 1 == actualRuta.points.size()) {
                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create(); //Read Update
                     alertDialog.setTitle("¡Enhorabuena!");
                     alertDialog.setMessage("Has finalizado el reto en " + comenzarBoton.getText() + " minutos.");
                     cd.cancel();
                     comenzarBoton.setVisibility(View.INVISIBLE);
                     actualReto_polyline.remove();
-                    actualReto_titulo.setText("No hay ningun reto seleccionado");
+                    //
+                    // actualReto_titulo.setText("No hay ningun reto seleccionado");
                     actualReto_descripcion.setText("Selecciona un reto en el menu");
                     alertDialog.setButton("Vale", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -840,20 +841,20 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference mRef =  database.getReference().child("Users data").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Retos Completados");
-                    mRef.child(String.valueOf(System.currentTimeMillis())).child(actualReto.id).setValue(timeLeft);
+                    mRef.child(String.valueOf(System.currentTimeMillis())).child(actualRuta.id).setValue(timeLeft);
                     mRef.push();
 
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("Retos").document(actualReto.id).collection("CompletadoPor").add(FirebaseAuth.getInstance().getUid());
-                    actualReto = null;
+                    db.collection("Retos").document(actualRuta.id).collection("CompletadoPor").add(FirebaseAuth.getInstance().getUid());
+                    actualRuta = null;
                     alertDialog.show();
 
                     // Ha llegado a un punto intermedio
                 } else {
-                    Log.d("", String.valueOf(actualPoint + 1) + " " + actualReto.points.size());
+                    Log.d("", String.valueOf(actualPoint + 1) + " " + actualRuta.points.size());
                     CameraPosition cameraPosition =
                             new CameraPosition.Builder()
-                                    .target(actualReto.points.get(actualPoint + 1))
+                                    .target(actualRuta.points.get(actualPoint + 1))
                                     .bearing(45)
                                     .tilt(90)
                                     .zoom(myMap.getCameraPosition().zoom)
@@ -966,9 +967,9 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
             cd.cancel();
             comenzarBoton.setVisibility(View.INVISIBLE);
             actualReto_polyline.remove();
-            actualReto_titulo.setText("No hay ningun reto seleccionado");
+            //actualReto_titulo.setText("No hay ningun reto seleccionado");
             actualReto_descripcion.setText("Selecciona un reto en el menu");
-            actualReto = null;
+            actualRuta = null;
             alertDialog.setButton("Vale", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     // here you can add functions

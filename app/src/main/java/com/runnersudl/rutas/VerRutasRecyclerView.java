@@ -1,4 +1,4 @@
-package com.runnersudl.retos;
+package com.runnersudl.rutas;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -40,13 +40,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class VerRetosRecyclerView extends RecyclerView.Adapter<VerRetosRecyclerView.ViewHolder> {
 
-    private List<Reto> retos;
+    private List<Ruta> rutas;
 
     private Context context;
 
-    public VerRetosRecyclerView(List<Reto> locations, MyAdapterListener listener) {
+    public VerRetosRecyclerView(List<Ruta> locations, MyAdapterListener listener) {
         super();
-        retos = locations;
+        rutas = locations;
         onClickListener = listener;
     }
 
@@ -72,7 +72,7 @@ public class VerRetosRecyclerView extends RecyclerView.Adapter<VerRetosRecyclerV
 
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference mRef =  database.getReference().child("Users data").child(retos.get(position).userUID);
+        DatabaseReference mRef =  database.getReference().child("Users data").child(rutas.get(position).userUID);
         mRef.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
@@ -152,7 +152,7 @@ public class VerRetosRecyclerView extends RecyclerView.Adapter<VerRetosRecyclerV
         private void setMapLocation() {
             if (map == null) return;
 
-            Reto data = (Reto) mapView.getTag();
+            Ruta data = (Ruta) mapView.getTag();
             if (data == null) return;
 
             Polyline polyline = map.addPolyline(new PolylineOptions()
@@ -181,7 +181,7 @@ public class VerRetosRecyclerView extends RecyclerView.Adapter<VerRetosRecyclerV
         }
 
         private void bindView(int pos) {
-            Reto item = retos.get(pos);
+            Ruta item = rutas.get(pos);
             layout.setTag(this);
             mapView.setTag(item);
             setMapLocation();

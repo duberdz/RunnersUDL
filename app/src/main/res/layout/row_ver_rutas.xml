@@ -147,7 +147,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/accept_button"
-            android:text="Realizar reto"
+            android:text="Realizar ruta"
             android:textColor="@android:color/white"/>
     </LinearLayout>
 
