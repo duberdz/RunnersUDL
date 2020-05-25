@@ -80,6 +80,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.BuildConfig;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -89,7 +90,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.runnersudl.BuildConfig;
 import com.runnersudl.R;
 import com.runnersudl.services.ActivityIntentService;
 import com.runnersudl.services.NetworkChangeReceiver;
@@ -97,17 +97,15 @@ import com.runnersudl.services.NetworkChangeReceiver;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RetosFragment extends Fragment implements OnMapReadyCallback, SharedPreferences.OnSharedPreferenceChangeListener{
+public class RutasFragment extends Fragment implements OnMapReadyCallback, SharedPreferences.OnSharedPreferenceChangeListener{
 
     // Root View
     private View rootView;
@@ -122,12 +120,12 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
     Polyline polyline;
     Marker startPoint;
 
-    // LISTADO DE RETOS
+    // LISTADO DE RUTASS
     List<Ruta> listadoRutas = new ArrayList<>();
 
     // Floating Buttons Menu
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton FAM_crearReto, FAM_verRetos;
+    FloatingActionButton FAM_crearRuta, FAM_verRutas;
 
     // Actual ruta
     Ruta actualRuta;
@@ -140,72 +138,24 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
 
     int actualPoint = 1;
 
-    /**
-     * Provides access to the Fused Location Provider API.
-     */
     private FusedLocationProviderClient mFusedLocationClient;
-
-    /**
-     * Provides access to the Location Settings API.
-     */
     private SettingsClient mSettingsClient;
-
-    /**
-     * Stores parameters for requests to the FusedLocationProviderApi.
-     */
     private LocationRequest mLocationRequest;
-
-    /**
-     * Stores the types of location services the client is interested in using. Used for checking
-     * settings to determine if the device has optimal location settings.
-     */
     private LocationSettingsRequest mLocationSettingsRequest;
-
-    /**
-     * Callback for Location events.
-     */
     private LocationCallback mLocationCallback;
-
-    /**
-     * Represents a geographical location.
-     */
     private Location mCurrentLocation;
-    /**
-     * Code used in requesting runtime permissions.
-     */
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-
-    /**
-     * Constant used in the location settings dialog.
-     */
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
-
-    /**
-     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
-     */
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-
-    /**
-     * The fastest rate for active location updates. Exact. Updates will never be more frequent
-     * than this value.
-     */
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-
-    /**
-     * Tracks the status of the location updates request. Value changes when the user presses the
-     * Start Updates and Stop Updates buttons.
-     */
     private Boolean mRequestingLocationUpdates;
 
-    /**
-     * Time when the location was updated represented as a String.
-     */
 
     // SharedPreferences
     SharedPreferences prefs;
 
-    boolean retoEmpezado;
+    boolean rutaEmpezada;
 
     private static CountDownTimer cd;
     long timeLeft, initialTime;
@@ -220,7 +170,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.fragment_retos, container, false);
+            rootView = inflater.inflate(R.layout.fragment_rutas, container, false);
             MapsInitializer.initialize(Objects.requireNonNull(this.getActivity()));
             mMapView = (MapView) rootView.findViewById(R.id.map);
             no_connection = (TextView) rootView.findViewById(R.id.no_connection);
@@ -239,7 +189,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
                 public void onClick(View v) {
                     startUpTimer();
                     info.setText("¡Corre!");
-                    retoEmpezado = true;
+                    rutaEmpezada = true;
                     CameraPosition cameraPosition =
                             new CameraPosition.Builder()
                                     .target(actualRuta.points.get(0))
@@ -289,17 +239,17 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         setRetainInstance(true);
 
         materialDesignFAM = (FloatingActionMenu) rootView.findViewById(R.id.material_design_android_floating_action_menu);
-        FAM_crearReto = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item1);
-        FAM_verRetos = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item2);
+        FAM_crearRuta = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item1);
+        FAM_verRutas = (FloatingActionButton) rootView.findViewById(R.id.material_design_floating_action_menu_item2);
 
         // AlertDialog crear reto
-        FAM_crearReto.setOnClickListener(new View.OnClickListener() {
+        FAM_crearRuta.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 materialDesignFAM.close(true);
 
                 final Dialog dialog = new Dialog(getActivity());
 
-                dialog.setContentView(R.layout.dialog_crear_reto); //your custom content
+                dialog.setContentView(R.layout.dialog_crear_ruta); //your custom content
 
                 MapView mMapView = (MapView) dialog.findViewById(R.id.map);
                 final EditText titulo = (EditText) dialog.findViewById(R.id.titulo);
@@ -365,10 +315,10 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
                         // Add a new document with a generated ID
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                        Map<String, Object> reto = new Ruta(titulo.getText().toString(), desc.getText().toString(), points).toHashMap();
+                        Map<String, Object> ruta = new Ruta(titulo.getText().toString(), desc.getText().toString(), points).toHashMap();
 
                         db.collection("Retos")
-                                .add(reto)
+                                .add(ruta)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
@@ -381,7 +331,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
                                         Log.w(TAG, "Error adding document", e);
                                     }
                                 });
-                        Toast.makeText(getContext(), getString(R.string.reto_creado), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getString(R.string.ruta_creada), Toast.LENGTH_LONG).show();
                         points.clear();
                         dialog.dismiss();
                     }
@@ -392,14 +342,14 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         });
 
         // AlertDialog listar retos
-        FAM_verRetos.setOnClickListener(new View.OnClickListener() {
+        FAM_verRutas.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 materialDesignFAM.close(true);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                 LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.dialog_ver_retos, null);
+                View dialogView = inflater.inflate(R.layout.dialog_ver_rutas, null);
 
                 RecyclerView recyclerView;
                 RecyclerView.Adapter mAdapter;
@@ -419,10 +369,10 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-                mAdapter = new VerRetosRecyclerView(listadoRetos, new VerRetosRecyclerView.MyAdapterListener() {
+                mAdapter = new VerRutasRecyclerView(listadoRutas, new VerRutasRecyclerView.MyAdapterListener() {
                     @Override
                     public void retoOnClick(View v, int position) {
-                        setReto(listadoRetos.get(position));
+                        setReto(listadoRutas.get(position));
                         dialog.cancel();
                     }
                 });
@@ -473,7 +423,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         //actualReto_titulo.setText(reto.name);
         actualReto_descripcion.setText(ruta.descripcion);
         actualRuta = ruta;
-        if (retoEmpezado) {
+        if (rutaEmpezada) {
             cd.cancel();
             comenzarBoton.setVisibility(View.INVISIBLE);
             myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(actualRuta.getMiddlePoint(), 15));
@@ -518,8 +468,8 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         super.onPause();
         mMapView.onPause();
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("listadoRetos", new Gson().toJson(listadoRetos));
-        editor.putString("actualReto", new Gson().toJson(actualRuta));
+        editor.putString("listadoRutas", new Gson().toJson(listadoRutas));
+        editor.putString("actualRuta", new Gson().toJson(actualRuta));
         editor.apply();
 
         // Activity recognition
@@ -599,9 +549,9 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         sPref = sharedPrefs.getString("listPref", "Wi-Fi");
 
         //SharedPreferences
-        String json = prefs.getString("listadoRetos","");
+        String json = prefs.getString("listadoRutas","");
         Type type = new TypeToken<List<Ruta>>() {}.getType();
-        if (!json.isEmpty()) listadoRetos = new Gson().fromJson(json, type);
+        if (!json.isEmpty()) listadoRutas = new Gson().fromJson(json, type);
     }
 
     private void createLocationRequest() {
@@ -620,9 +570,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    /**
-     * Creates a callback for receiving location events.
-     */
+     // Creates a callback for receiving location events.
     private void createLocationCallback() {
         mLocationCallback = new LocationCallback() {
             @Override
@@ -635,11 +583,6 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         };
     }
 
-    /**
-     * Uses a {@link com.google.android.gms.location.LocationSettingsRequest.Builder} to build
-     * a {@link com.google.android.gms.location.LocationSettingsRequest} that is used for checking
-     * if a device has the needed location settings.
-     */
     private void buildLocationSettingsRequest() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
@@ -793,9 +736,6 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         }
     }
 
-    /**
-     * Show snackbar
-     */
     private void showSnackbar(String mainTextStringId, String actionStringId,
                               View.OnClickListener listener) {
         Snackbar.make(
@@ -810,17 +750,17 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         if (mCurrentLocation != null && myMap != null)
             marker = myMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.pointer)).position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())).title("Localización actual"));
         if (mCurrentLocation != null && myMap != null && actualRuta != null) {
-            Log.d("", retoEmpezado + " " + " Actual: " + mCurrentLocation.getLatitude() + " " + mCurrentLocation.getLongitude() + " Reto: " + actualRuta.points.get(actualPoint).latitude + " " + actualRuta.points.get(actualPoint).longitude);
+            Log.d("", rutaEmpezada + " " + " Actual: " + mCurrentLocation.getLatitude() + " " + mCurrentLocation.getLongitude() + " Reto: " + actualRuta.points.get(actualPoint).latitude + " " + actualRuta.points.get(actualPoint).longitude);
 
             // Ha llegado al punto inicial
-            if (!retoEmpezado && Math.abs(mCurrentLocation.getLatitude() - actualRuta.points.get(0).latitude) < 0.0002 && Math.abs(mCurrentLocation.getLongitude() - actualRuta.points.get(0).longitude) < 0.0002) {
+            if (!rutaEmpezada && Math.abs(mCurrentLocation.getLatitude() - actualRuta.points.get(0).latitude) < 0.0002 && Math.abs(mCurrentLocation.getLongitude() - actualRuta.points.get(0).longitude) < 0.0002) {
                 info.setText("Haz click en 'Comenzar reto'");
                 comenzarBoton.setVisibility(View.VISIBLE);
-            } else if (!retoEmpezado) {
+            } else if (!rutaEmpezada) {
                 comenzarBoton.setVisibility(View.INVISIBLE);
                 info.setText("Muévete hacia el punto inicial");
             }
-            if (retoEmpezado && Math.abs(mCurrentLocation.getLatitude() - actualRuta.points.get(actualPoint).latitude) < 0.0002 && Math.abs(mCurrentLocation.getLongitude() - actualRuta.points.get(actualPoint).longitude) < 0.0002) {
+            if (rutaEmpezada && Math.abs(mCurrentLocation.getLatitude() - actualRuta.points.get(actualPoint).latitude) < 0.0002 && Math.abs(mCurrentLocation.getLongitude() - actualRuta.points.get(actualPoint).longitude) < 0.0002) {
 
                 // Ha llegado a la meta
                 if (actualPoint + 1 == actualRuta.points.size()) {
@@ -888,31 +828,13 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
                 });
     }
 
-    /*-----------------------------------------
-     *              TIMER
-     ----------------------------------------*/
-
+    // Cronometro
     // Cuando el jugador no activa el control de tiempo, el tiempo va hacia arriba
     public void startUpTimer() {
-        cd = new CountDownTimer(Long.MAX_VALUE, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                String text = String.format(Locale.getDefault(), "%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(timeLeft) % 60, TimeUnit.MILLISECONDS.toSeconds(timeLeft) % 60);
-                timeLeft += 1000;
-                comenzarBoton.setText(text);
-            }
-
-            public void onFinish() {
-            }
-
-        }.start();
+        //pendiente
     }
 
-    /*----------------------------------------*
-     *           ACTIVITY RECOGNITION         *
-     *----------------------------------------*/
-
-
+    // ACtivity recognition
     private Context mContext;
     public static final String DETECTED_ACTIVITY = ".DETECTED_ACTIVITY";
     //Define an ActivityRecognitionClient//
@@ -960,7 +882,7 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         Log.d("Activity Recognition", detectedActivities.toString());
         activityText.setText(getMostConfidentActivity(detectedActivities));
 
-        if (retoEmpezado && (activityText.getText() == "Estás en coche" || activityText.getText() == "Estás en bici")) {
+        if (rutaEmpezada && (activityText.getText() == "Estás en coche" || activityText.getText() == "Estás en bici")) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create(); //Read Update
             alertDialog.setTitle("¡Estás haciendo trampas! >:( ");
             alertDialog.setMessage("Mientras estás realizando un reto, no puedes ir en bici o en cualquier otro vehículo. El reto ha sido desactivado.");
@@ -999,10 +921,8 @@ public class RetosFragment extends Fragment implements OnMapReadyCallback, Share
         }
     }
 
-    /*--------------------------------------*
-     *            CHECK NETWORK             *
-     *--------------------------------------*/
 
+    // Comprobando la conexion
     // The user's current network preference setting.
     public static String sPref = null;
 

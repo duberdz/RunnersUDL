@@ -38,13 +38,13 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class VerRetosRecyclerView extends RecyclerView.Adapter<VerRetosRecyclerView.ViewHolder> {
+public class VerRutasRecyclerView extends RecyclerView.Adapter<VerRutasRecyclerView.ViewHolder> {
 
     private List<Ruta> rutas;
 
     private Context context;
 
-    public VerRetosRecyclerView(List<Ruta> locations, MyAdapterListener listener) {
+    public VerRutasRecyclerView(List<Ruta> locations, MyAdapterListener listener) {
         super();
         rutas = locations;
         onClickListener = listener;
@@ -53,15 +53,11 @@ public class VerRetosRecyclerView extends RecyclerView.Adapter<VerRetosRecyclerV
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ver_retos, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_ver_rutas, parent, false);
         v.setOnClickListener(new RetoClickListener());
         return new ViewHolder(v);
     }
 
-    /**
-     * This function is called when the user scrolls through the screen and a new item needs
-     * to be shown. So we will need to bind the holder with the details of the next item.
-     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (holder == null) {
@@ -102,7 +98,7 @@ public class VerRetosRecyclerView extends RecyclerView.Adapter<VerRetosRecyclerV
 
     @Override
     public int getItemCount() {
-        return retos.size();
+        return rutas.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {

@@ -1,18 +1,15 @@
 package com.runnersudl;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
 //import android.support.v4.app.FragmentTransaction;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +26,7 @@ import com.google.firebase.storage.StorageReference;
 import com.runnersudl.estadisticas.EstadisticasFragment;
 import com.runnersudl.estadisticas.HistorialSteps;
 import com.runnersudl.login.LoginActivity;
-import com.runnersudl.retos.RetosFragment;
+import com.runnersudl.rutas.RutasFragment;
 import com.runnersudl.settings.SettingsActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -80,7 +77,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 fragment = new EstadisticasFragment();
                 break;
             case R.id.retos:
-                fragment = new RetosFragment();
+                fragment = new RutasFragment();
                 break;
         }
         replaceFragment(fragment);

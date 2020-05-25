@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import static com.runnersudl.retos.RetosFragment.checkNetwork;
+import static com.runnersudl.rutas.RutasFragment.checkNetwork;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 

@@ -46,14 +46,14 @@
     <string name="pasos">pasos</string>
     <string name="percent">%1$d%%</string>
 
-    <!-- RETOS -->
-    <string name="retos">Retos</string>
+    <!-- Rutas -->
+    <string name="rutas">Rutas</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus accumsan arcu ac tortor mattis tincidunt nec in dui. Aenean elementum magna at dapibus tristique. Etiam eu lobortis orci. Phasellus eleifend augue et hendrerit scelerisque. Suspendisse vehicula tempor eros sed fermentum. Nulla aliquam dapibus tellus, a porta mauris finibus eget. Sed vestibulum tellus sed neque bibendum blandit. Nam dictum urna ut mi egestas, at gravida tortor auctor. Etiam tempor enim in lectus vulputate, sed euismod dolor sagittis. Pellentesque scelerisque hendrerit massa sed rutrum. Cras non posuere tellus. Morbi sodales sem ac libero ullamcorper, eget imperdiet nisi blandit.</string>
-    <string name="no_hay_ningun_reto_seleccionado">No hay ningun reto seleccionado</string>
-    <string name="selecciona_un_reto_en_el_menu">Selecciona un reto en el menu</string>
-    <string name="reto_activo">Reto activo</string>
+    <string name="no_hay_ningun_ruta_seleccionado">No hay ningun ruta seleccionado</string>
+    <string name="selecciona_un_ruta_en_el_menu">Selecciona un ruta en el menu</string>
+    <string name="ruta_activo">Ruta activa</string>
     <string name="permiso_denegado">El permiso ha sido denegado pero es necesario para una buena funcionalidad de la aplicación.</string>
-    <string name="reto_creado">Reto creado satisfactoriamente</string>
+    <string name="ruta_creada">Ruta creada satisfactoriamente</string>
     <string name="permisos_necesarios">Los permisos de localización son necesarios para la correcta funcionalidad de la aplicación</string>
 
     <!-- KEYS -->
@@ -79,7 +79,7 @@
     <string name="ranking">Ranking</string>
     <string name="pasos_C">Pasos</string>
     <string name="kilometros_C">Kilometros</string>
-    <string name="retos_c">Retos</string>
+    <string name="rutas_c">Rutas</string>
     <string name="loading">Loading...</string>
     <string name="hoy">Hoy</string>
     <string name="introduce_el_nuevo_objetivo_de_pasos">Introduce el nuevo objetivo de pasos.</string>

@@ -72,7 +72,7 @@ public class EstadisticasFragment extends Fragment implements SensorEventListene
     // Root View
     private View rootView;
 
-    private TextView objetivo_tv, pasos_tv, progreso_tv, kilometros_tv, calorias_tv;
+    private TextView pasos_tv, kilometros_tv, calorias_tv;
 
     private float objetivo = 10000;
     private float pasos = 0;
@@ -91,51 +91,10 @@ public class EstadisticasFragment extends Fragment implements SensorEventListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_estadisticas, container, false);
 
-        objetivo_tv = rootView.findViewById(R.id.objetivo);
         pasos_tv = rootView.findViewById(R.id.pasos);
-        progreso_tv = rootView.findViewById(R.id.progress);
         kilometros_tv = rootView.findViewById(R.id.kilometros);
         calorias_tv = rootView.findViewById(R.id.calorias);
-        //button = rootView.findViewById(R.id.edit_objetivo);
         historial_button = rootView.findViewById(R.id.historial);
-
-        // AlertDialog para cambiar el objetivo de pasos
-        /*button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                LayoutInflater inflater = getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.dialog_editar_objetivo, null);
-
-                Button cancelar = (Button) dialogView.findViewById(R.id.cancelar);
-                Button guardar = (Button) dialogView.findViewById(R.id.guardar);
-
-                final EditText nuevoObjetivo = (EditText) dialogView.findViewById(R.id.nuevoObjetivo_et);
-
-                builder.setView(dialogView);
-                final AlertDialog dialog = builder.create();
-
-                cancelar.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-
-                guardar.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        String obj = nuevoObjetivo.getText().toString();
-                        setObjetivo(Integer.valueOf(obj));
-                        setProgress();
-                        Toast.makeText(getContext(), getString(R.string.objetivo_cambiado), Toast.LENGTH_LONG).show();
-                        dialog.cancel();
-                    }
-                });
-
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-            }
-        });*/
-
 
         // AlertDialog para cambiar el historial
         historial_button.setOnClickListener(new View.OnClickListener() {
@@ -214,26 +173,12 @@ public class EstadisticasFragment extends Fragment implements SensorEventListene
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        _progressBar = (ProgressBar) getView().findViewById (R.id.circularProgressBar);
-    }
-
     // Actualiza los pasos
     private void setPasos(int pasosDeHoy){
         pasos = pasosDeHoy;
         pasos_tv.setText(String.valueOf(Math.round(pasos)));
-        setProgress();
         setKilometros();
         setCalorias();
-    }
-
-    // Actualiza el progreso
-    private void setProgress(){
-        progress = (pasos/objetivo * 100);
-        progreso_tv.setText(getString(R.string.porcentajeObjetivo, progress) + "%");
-        _progressBar.setProgress(Math.round(pasos/objetivo * 100));
     }
 
     // Actualiza los kilometros recorridos
@@ -254,21 +199,17 @@ public class EstadisticasFragment extends Fragment implements SensorEventListene
         calorias_tv.setText(getString(R.string.kilometros, calorias));
     }
 
-    // Actualiza el objetivo del usuario.
-    private void setObjetivo(int obj){
-        objetivo = obj;
-        objetivo_tv.setText(getString(R.string.objetivo, (int) objetivo));
-    }
-
     public void actualizar() {
-        setProgress();
+        //setProgress();
         setKilometros();
         setCalorias();
     }
 
-    /*----------------------------------------------------------------------------------------------
-     *                              SENSORES (Sensor TYPE_STEP_COUNTER)
-     *--------------------------------------------------------------------------------------------*/
+    /**
+     *
+     * Control de sensores
+     * @param sensorEvent
+     */
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) { // Good practice -> Don't block the onSensorChanged() method
@@ -316,7 +257,6 @@ public class EstadisticasFragment extends Fragment implements SensorEventListene
 
         // Coger objetivo de SharedPreferences
         int objetivo_rec = sharedPref.getInt("objetivo", -1);
-        if (objetivo_rec != -1) setObjetivo(objetivo_rec);
 
         // TYPE_STEP_COUNTER Sensor
         running = true;

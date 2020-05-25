@@ -73,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
         android:layout_marginBottom="?attr/actionBarSize"
@@ -100,7 +100,7 @@
         fab:menu_labels_singleLine="false"
         fab:menu_labels_textColor="#f2f1f1"
         fab:menu_labels_textSize="15sp"
-        fab:menu_openDirection="up"
+        fab:menu_openDirection="down"
         fab:menu_shadowColor="#66aff198"
         fab:menu_shadowRadius="4dp"
         fab:menu_shadowXOffset="1dp"
@@ -113,7 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_white_24dp"
-            fab:fab_label="Crear Reto"
+            fab:fab_label="Crear Ruta"
             fab:fab_size="mini"/>
 
         <com.github.clans.fab.FloatingActionButton
@@ -121,7 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_listar_white_24dp"
-            fab:fab_label="Ver Retos"
+            fab:fab_label="Ver Rutas"
             fab:fab_size="mini"/>
     </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

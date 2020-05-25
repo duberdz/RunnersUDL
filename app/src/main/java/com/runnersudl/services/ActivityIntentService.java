@@ -10,7 +10,7 @@ import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.runnersudl.retos.RetosFragment;
+import com.runnersudl.rutas.RutasFragment;
 import com.runnersudl.R;
 
 import java.lang.reflect.Type;
@@ -41,7 +41,7 @@ public class ActivityIntentService extends IntentService {
             ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
             PreferenceManager.getDefaultSharedPreferences(this)
                     .edit()
-                    .putString(RetosFragment.DETECTED_ACTIVITY,
+                    .putString(RutasFragment.DETECTED_ACTIVITY,
                             detectedActivitiesToJson(detectedActivities))
                     .apply();
 

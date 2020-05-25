@@ -18,10 +18,10 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorPressed"
             android:textSize="20sp"
             android:padding="10dp"
-            android:text="Retos"/>
+            android:text="Rutas"/>
 
         <FrameLayout
             android:layout_width="match_parent"
