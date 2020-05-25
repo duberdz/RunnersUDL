@@ -808,9 +808,6 @@ public class RutasFragment extends Fragment implements OnMapReadyCallback, Share
         }
     }
 
-    /**
-     * Removes location updates from the FusedLocationApi.
-     */
     private void stopLocationUpdates() {
         if (!mRequestingLocationUpdates) {
             return;

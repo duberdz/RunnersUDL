@@ -28,8 +28,8 @@
         android:layout_centerHorizontal="true">
 
         <com.airbnb.lottie.LottieAnimationView
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center|top"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
@@ -63,7 +63,7 @@
 
             <ImageView
                 android:id="@+id/cal_rectangle"
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/rectangle" />
@@ -114,7 +114,7 @@
 
             <ImageView
                 android:id="@+id/run_rectangle"
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/rectangle" />
@@ -162,6 +162,7 @@
 
     <Button
         android:id="@+id/historial"
+        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:paddingStart="10dp"
