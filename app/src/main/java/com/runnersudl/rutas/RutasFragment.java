@@ -45,6 +45,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.api.ApiException;
@@ -296,8 +297,8 @@ public class RutasFragment extends Fragment implements OnMapReadyCallback, Share
                     }
                 });
 
-                Button cancelButton = (Button) dialog.findViewById(R.id.cancelar);
-                Button guardarButton = (Button) dialog.findViewById(R.id.guardar);
+                LottieAnimationView cancelButton = dialog.findViewById(R.id.cancelar);
+                LottieAnimationView guardarButton = dialog.findViewById(R.id.guardar);
 
                 // Boton cancelar, cerrar AlertDialog
                 cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -400,7 +401,7 @@ public class RutasFragment extends Fragment implements OnMapReadyCallback, Share
 
                 recyclerView.setAdapter(mAdapter);
 
-                Button cancelar = (Button) dialogView.findViewById(R.id.cancelar);
+                LottieAnimationView cancelar = dialogView.findViewById(R.id.cancelar);
 
                 cancelar.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
@@ -688,9 +689,8 @@ public class RutasFragment extends Fragment implements OnMapReadyCallback, Share
         }
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
+    //Callback received when a permissions request has been completed.
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {

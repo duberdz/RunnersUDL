@@ -87,13 +87,21 @@
             android:layout_weight="1"
             android:gravity="center">
 
-            <Button
+            <!--<Button
                 android:id="@+id/cancelar"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:background="@drawable/cancel_button"
                 android:textColor="@android:color/white"
-                android:text="Cancelar" />
+                android:text="Cancelar" />-->
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/cancelar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/button_cancel" />
         </LinearLayout>
 
         <LinearLayout
@@ -103,13 +111,21 @@
             android:layout_weight="1"
             android:gravity="center">
 
-            <Button
+            <!--<Button
                 android:id="@+id/guardar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:background="@drawable/accept_button"
-                android:text="Guardar" />
+                android:text="Guardar" />-->
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/guardar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/button_save" />
         </LinearLayout>
 
     </LinearLayout>
